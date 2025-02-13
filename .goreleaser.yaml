@@ -56,9 +56,13 @@ changelog:
       - "^docs:"
       - "^test:"
 
+
 release:
+  header: |
+    SQLRecorder is a tool to record all passing SQL statements.
+
   footer: >-
 
     ---
 
-    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+    by LtmThink.
