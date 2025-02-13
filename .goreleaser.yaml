@@ -58,11 +58,6 @@ changelog:
 
 
 release:
+  # 在发布页的changelog之前将会显示下面这一段
   header: |
     SQLRecorder is a tool to record all passing SQL statements.
-
-  footer: >-
-
-    ---
-
-    by LtmThink.
