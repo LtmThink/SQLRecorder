@@ -58,7 +58,8 @@ archives:
       - README.md
 
 # 不需要注释掉
-#changelog:
+changelog:
+  disable : true
 #  sort: asc
 #  filters:
 #    exclude:
@@ -69,7 +70,6 @@ archives:
 release:
   # 在发布页的changelog之前将会显示下面这一段
   header: |
-    ## [1.0.1]
     ### Changed
     - 新增更多查询结果细节展示
     ### Fixed
