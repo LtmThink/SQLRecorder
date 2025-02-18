@@ -73,7 +73,7 @@ func main() {
 	fmt.Print("\033[?25l")
 	go func() {
 		<-sigs
-		fmt.Println("\033[32m\nbye👋\033[0m")
+		fmt.Println("\033[32m\n\nbye👋\033[0m")
 		// 显示光标
 		fmt.Print("\033[?25h")
 		os.Exit(0)

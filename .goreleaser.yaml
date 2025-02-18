@@ -27,8 +27,16 @@ builds:
     goarch:
       - amd64
       - arm64
+      - 386
     # 生成的二进制文件名
     binary: sqlrecorder
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: linux
+        goarch: arm64
+      - goos: linux
+        goarch: 386
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
@@ -49,15 +57,20 @@ archives:
       - images/**
       - README.md
 
-changelog:
-  sort: asc
-  filters:
-    exclude:
-      - "^docs:"
-      - "^test:"
+# 不需要注释掉
+#changelog:
+#  sort: asc
+#  filters:
+#    exclude:
+#      - "^docs:"
+#      - "^test:"
 
 
 release:
   # 在发布页的changelog之前将会显示下面这一段
   header: |
-    SQLRecorder is a tool to record all passing SQL statements.
+    ## [1.0.1]
+    ### Changed
+    - 新增更多查询结果细节展示
+    ### Fixed
+    - 修复了可能存在的查询语句与结果不匹配问题

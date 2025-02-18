@@ -1,0 +1,12 @@
+CREATE DATABASE IF NOT EXISTS test;
+USE test;
+CREATE TABLE IF NOT EXISTS users (name VARCHAR(100));
+INSERT INTO users (name) VALUES ('张三'),('李四'),('王五');
+UPDATE users SET name = '熊二' WHERE name = '张三';
+SELECT * FROM users;
+DELETE FROM users WHERE name = '熊二';
+DROP TABLE IF EXISTS users;
+DROP DATABASE IF EXISTS test;
+
+SELECT 123*aaa;
+

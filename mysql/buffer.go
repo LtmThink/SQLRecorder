@@ -45,13 +45,13 @@ func (b *buffer) flip() {
 // fill reads into the buffer until at least _need_ bytes are in it
 func (b *buffer) fill(need int) error {
 	n := b.length
-	// fill data into its double-buffering target: if we've called
+	// fill packets into its double-buffering target: if we've called
 	// flip on this buffer, we'll be copying to the background buffer,
-	// and then filling it with network data; otherwise we'll just move
+	// and then filling it with network packets; otherwise we'll just move
 	// the contents of the current buffer to the front before filling it
 	dest := b.dbuf[b.flipcnt&1]
 
-	// grow buffer if necessary to fit the whole packet.
+	// grow buffer if necessary to fit the whole message.
 	if need > len(dest) {
 		// Round up to the next multiple of the default size
 		dest = make([]byte, ((need/defaultBufSize)+1)*defaultBufSize)
@@ -63,8 +63,8 @@ func (b *buffer) fill(need int) error {
 		}
 	}
 
-	// if we're filling the fg buffer, move the existing data to the start of it.
-	// if we're filling the bg buffer, copy over the data
+	// if we're filling the fg buffer, move the existing packets to the start of it.
+	// if we're filling the bg buffer, copy over the packets
 	if n > 0 {
 		copy(dest[:n], b.buf[b.idx:])
 	}

@@ -18,6 +18,7 @@ func Recorder(server string, proxy string) (err error) {
 	defer listener.Close()
 	fmt.Println(Yellow("Please make sure the mysql server is running on " + server + " ..."))
 	fmt.Println(Green("MySQL Proxy is listening on " + proxy + " ..."))
+	fmt.Println(Red("Press Ctrl-C to quit ..."))
 
 	for {
 		// 等待客户端连接
@@ -47,37 +48,25 @@ func handleClientConnection(clientConn net.Conn, server string) {
 		log.Println("[Proxy] Error: %v", err)
 		return
 	}
+	// 初始化packet记录器
+	p := messages{num: -1}
+	// 初始化客户端配置
+	cf := clientConfig{isParse: false}
 	// 启动两个 goroutine，一个处理客户端请求，另一个转发 MySQL 响应
-	go forwardToMySQL(clientConn, mysqlConn)
-	go forwardToClient(mysqlConn, clientConn)
+	clientRecorder := newConn(clientConn, &p, &cf)
+	mysqlRecorder := newConn(mysqlConn, &p, &cf)
+	go sendToReceive(mysqlConn, clientRecorder)
+	go sendToReceive(clientConn, mysqlRecorder)
 }
 
-func forwardToMySQL(clientConn, mysqlConn net.Conn) {
-	defer mysqlConn.Close() // 确保在所有数据转发完成后再关闭 mysqlConn
-	clientRecorder := newConn(clientConn)
+func sendToReceive(receiveConn net.Conn, c conn) {
+	defer receiveConn.Close() // 确保在所有数据转发完成后再关闭
 	for {
-		n, err := clientRecorder.recordClientPacket()
+		n, err := c.recordPacket()
 		if err != nil {
 			return
 		}
-		// 转发客户端的数据到 MySQL 服务器
-		_, err = mysqlConn.Write(n)
-		if err != nil {
-			return
-		}
-	}
-}
-
-func forwardToClient(mysqlConn, clientConn net.Conn) {
-	defer clientConn.Close() // 确保在所有数据转发完成后再关闭 clientConn
-	serverRecorder := newConn(mysqlConn)
-	for {
-		n, err := serverRecorder.recordServerPacket()
-		if err != nil {
-			return
-		}
-		// 转发 MySQL 响应到客户端
-		_, err = clientConn.Write(n)
+		_, err = receiveConn.Write(n)
 		if err != nil {
 			return
 		}
