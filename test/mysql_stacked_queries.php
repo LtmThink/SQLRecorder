@@ -12,10 +12,10 @@ $sql = "
 CREATE DATABASE IF NOT EXISTS test;
 USE test;
 CREATE TABLE IF NOT EXISTS users (name VARCHAR(100));
-INSERT INTO users (name) VALUES ('张三'),('李四'),('王五');
-UPDATE users SET name = '熊二' WHERE name = '张三';
+INSERT INTO users (name) VALUES ('test3'),('test4'),('test5');
+UPDATE users SET name = 'test2' WHERE name = 'test3';
 SELECT * FROM users;
-DELETE FROM users WHERE name = '熊二';
+DELETE FROM users WHERE name = 'test2';
 DROP TABLE IF EXISTS users;
 DROP DATABASE IF EXISTS test;
 

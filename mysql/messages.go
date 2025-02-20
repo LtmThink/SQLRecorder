@@ -69,7 +69,7 @@ func (m *message) writeToTerminal() {
 func (m *message) processTabular(deprecateEOF bool) {
 	if m.num >= 255 {
 		// packet包数超过255个，不处理
-		m.result = fmt.Sprintf("OK, too many fields and rows")
+		m.result = fmt.Sprintf("OK, too many columns and rows")
 		m.resType = iEOF
 		return
 	}
@@ -80,7 +80,7 @@ func (m *message) processTabular(deprecateEOF bool) {
 		rawNumber++
 	}
 	rawCount := m.num - rawNumber + 1
-	m.result = fmt.Sprintf("OK, %d fields, %d rows in set", fieldCount, rawCount)
+	m.result = fmt.Sprintf("OK, %d columns, %d rows in set", fieldCount, rawCount)
 	m.resType = iEOF
 	// 获取具体查询表格结果,留待以后再写吧
 	// 获取字段
