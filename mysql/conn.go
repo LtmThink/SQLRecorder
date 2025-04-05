@@ -1,18 +1,20 @@
 package mysql
 
 import (
+	"SQLRecorder/buffer"
+	"SQLRecorder/utils"
 	"fmt"
 	"net"
 )
 
 type conn struct {
-	buf          buffer
+	buf          buffer.Buffer
 	messages     *messages
 	clientConfig *clientConfig
 }
 
 func newConn(nc net.Conn, p *messages, cf *clientConfig) conn {
-	fg := newBuffer(nc)
+	fg := buffer.NewBuffer(nc)
 	return conn{fg, p, cf}
 }
 
@@ -21,10 +23,10 @@ func (c *conn) readPacket() ([]byte, []byte, error) {
 	var prevData []byte
 	for {
 		// read message header
-		data, err := c.buf.readNext(4)
+		data, err := c.buf.ReadNext(4)
 		compData = append(compData, data...)
 		if err != nil {
-			return nil, nil, ErrInvalidConn
+			return nil, nil, utils.ErrInvalidConn
 		}
 
 		// message length [24 bit]
@@ -45,17 +47,17 @@ func (c *conn) readPacket() ([]byte, []byte, error) {
 		if pktLen == 0 {
 			// there was no previous message
 			if prevData == nil {
-				return nil, nil, ErrInvalidConn
+				return nil, nil, utils.ErrInvalidConn
 			}
 
 			return prevData, compData, nil
 		}
 
 		// read message body [pktLen bytes]
-		data, err = c.buf.readNext(pktLen)
+		data, err = c.buf.ReadNext(pktLen)
 		compData = append(compData, data...)
 		if err != nil {
-			return nil, compData, ErrInvalidConn
+			return nil, compData, utils.ErrInvalidConn
 		}
 
 		// return packets if this was the last message

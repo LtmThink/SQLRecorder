@@ -1,7 +1,5 @@
 package mysql
 
-import "github.com/gookit/color"
-
 const (
 	maxPacketSize = 1<<24 - 1
 )
@@ -44,14 +42,4 @@ const (
 	comStmtReset
 	comSetOption
 	comStmtFetch
-)
-
-var (
-	// color
-	Green       = color.Green.Render
-	LightGreen  = color.LightGreen.Render
-	Yellow      = color.Yellow.Render
-	LightYellow = color.LightYellow.Render
-	Red         = color.Red.Render
-	LightRed    = color.LightRed.Render
 )

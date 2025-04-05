@@ -1,4 +1,4 @@
-package mysql
+package utils
 
 import (
 	"errors"

@@ -2,6 +2,7 @@ package main
 
 import (
 	"SQLRecorder/mysql"
+	"SQLRecorder/postgresql"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
@@ -28,14 +29,21 @@ func main() {
 	var app = cli.App{
 		Name:      "SQLRecorder",
 		Usage:     "Create a proxy to record all passing SQL statements.",
-		UsageText: "sqlrecorder command -s 127.0.0.1:3306 -p 127.0.0.1:43306",
+		UsageText: "sqlrecorder command -t mysql -s 127.0.0.1:3306 -p 127.0.0.1:43306",
 		Commands: []*cli.Command{
 			{
 				Name:      "command",
 				Aliases:   []string{"c"},
 				Usage:     "Create a proxy and all SQL will be displayed in the command line window",
-				UsageText: "sqlrecorder command -s 127.0.0.1:3306 -p 127.0.0.1:43306",
+				UsageText: "sqlrecorder command -t mysql -s 127.0.0.1:3306 -p 127.0.0.1:43306",
 				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "type",
+						Aliases:  []string{"t"},
+						Usage:    "The type of the SQL server.",
+						Required: false,
+						Value:    "mysql",
+					},
 					&cli.StringFlag{
 						Name:     "server",
 						Aliases:  []string{"s"},
@@ -54,13 +62,17 @@ func main() {
 				Action: func(context *cli.Context) error {
 					var server = context.String("server")
 					var proxy = context.String("proxy")
-					if server == "" || proxy == "" {
+					var sqlName = context.String("type")
+
+					if server == "" || proxy == "" || sqlName == "" {
 						return errors.New("Please enter the correct parameters")
 					}
-					sqlName := "mysql"
 					switch sqlName {
 					case "mysql":
 						err := mysql.Recorder(server, proxy)
+						return err
+					case "postgresql":
+						err := postgresql.Recorder(server, proxy)
 						return err
 					default:
 						return errors.New("Please enter the correct parameters")

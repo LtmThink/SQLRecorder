@@ -1,0 +1,81 @@
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/jackc/pgx/v5"
+)
+
+func main() {
+	// 数据库连接字符串
+	connStr := "postgres://user_7n2xtj:password_QKPYJb@localhost:45432/postgres"
+
+	// 连接数据库
+	conn, err := pgx.Connect(context.Background(), connStr)
+	if err != nil {
+		log.Fatalf("连接数据库失败: %v", err)
+	}
+	defer conn.Close(context.Background())
+	fmt.Println("成功连接数据库")
+
+	// 创建表（仅示例用）
+	_, err = conn.Exec(context.Background(), `
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            name TEXT NOT NULL,
+            age INT
+        )
+    `)
+	if err != nil {
+		log.Fatalf("创建表失败: %v", err)
+	}
+
+	// INSERT 示例
+	_, err = conn.Exec(context.Background(), `
+        INSERT INTO users (name, age) VALUES ($1, $2)
+    `, "Alice", 30)
+	if err != nil {
+		log.Fatalf("插入数据失败: %v", err)
+	}
+
+	// SELECT 示例
+	rows, err := conn.Query(context.Background(), `
+        SELECT id, name, age FROM users
+    `)
+	if err != nil {
+		log.Fatalf("查询失败: %v", err)
+	}
+	defer rows.Close()
+
+	fmt.Println("当前用户列表：")
+	for rows.Next() {
+		var id int
+		var name string
+		var age int
+		err := rows.Scan(&id, &name, &age)
+		if err != nil {
+			log.Fatalf("读取数据失败: %v", err)
+		}
+		fmt.Printf("ID: %d, Name: %s, Age: %d\n", id, name, age)
+	}
+
+	// UPDATE 示例
+	_, err = conn.Exec(context.Background(), `
+        UPDATE users SET age = $1 WHERE name = $2
+    `, 31, "Alice")
+	if err != nil {
+		log.Fatalf("更新数据失败: %v", err)
+	}
+
+	// DELETE 示例
+	_, err = conn.Exec(context.Background(), `
+        DELETE FROM users WHERE name = $1
+    `, "Alice")
+	if err != nil {
+		log.Fatalf("删除数据失败: %v", err)
+	}
+
+	fmt.Println("操作完成。")
+}

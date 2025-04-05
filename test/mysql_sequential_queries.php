@@ -32,7 +32,7 @@ if ($conn->query($sql) === TRUE) {
 }
 
 // 插入数据
-$sql = "INSERT INTO users (name) VALUES ('test3'),('test4'),('test5')";
+$sql = "INSERT INTO users (name) VALUES ('张三'),('李四'),('王五')";
 if ($conn->query($sql) === TRUE) {
     echo "Records inserted successfully.\n";
 } else {
@@ -40,7 +40,7 @@ if ($conn->query($sql) === TRUE) {
 }
 
 // 更新数据
-$sql = "UPDATE users SET name = 'test2' WHERE name = 'test3'";
+$sql = "UPDATE users SET name = '熊二' WHERE name = '张三'";
 if ($conn->query($sql) === TRUE) {
     echo "Record updated successfully.\n";
 } else {
@@ -60,7 +60,7 @@ if ($result->num_rows > 0) {
 }
 
 // 删除数据
-$sql = "DELETE FROM users WHERE name = 'test2'";
+$sql = "DELETE FROM users WHERE name = '熊二'";
 if ($conn->query($sql) === TRUE) {
     echo "Record deleted successfully.\n";
 } else {
