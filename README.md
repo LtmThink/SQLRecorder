@@ -28,9 +28,7 @@ sqlrecorder command -s 127.0.0.1:3306 -p 127.0.0.1:43306
 
 Web应用程序作为客户端连接SQLRecorder，SQLRecorder将实时记录产生的SQL查询以及语法错误
 
-![image-20250218143240663](./images/image-20250218143240663.png)
-
-![image-20250218191241049](./images/image-20250218191241049.png)
+![image-20250218191241049](./images/image-20250220113403898.png)
 
 #### 使用场景二
 
