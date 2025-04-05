@@ -68,6 +68,4 @@ release:
   # 在发布页的changelog之前将会显示下面这一段
   header: |
     ### Changed
-    - 新增更多查询结果细节展示
-    ### Fixed
-    - 修复了可能存在的查询语句与结果不匹配问题
+    - 增加对postgresql的支持
